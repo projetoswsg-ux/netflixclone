@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Clone – Profissional</title>
+  <!-- Font Awesome for icons (opcional, mas ajuda no aspecto profissional) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* RESET E ESTILOS GLOBAIS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #141414;
+      color: #fff;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 18px 4%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+      z-index: 100;
+      transition: background 0.3s;
+    }
+
+    header.scrolled {
+      background: #141414;
+    }
+
+    .logo {
+      color: #e50914;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo span {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 300;
+      margin-left: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #e5e5e5;
+    }
+
+    .nav-links a {
+      color: #e5e5e5;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #b3b3b3;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 18px;
+    }
+
+    .header-right i {
+      cursor: pointer;
+      color: #e5e5e5;
+      transition: color 0.2s;
+    }
+
+    .header-right i:hover {
+      color: #fff;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background-color: #e50914;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* HERO BANNER */
+    .hero {
+      position: relative;
+      height: 80vh;
+      min-height: 500px;
+      background: url('https://image.tmdb.org/t/p/original/9O1Iy9od7uG4l5X1X8X8X8X8X8X8X8.jpg') no-repeat center center/cover;
+      /* Fallback para uma imagem que funcione – usaremos um gradiente escuro + imagem genérica de fundo */
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.9) 100%), 
+                        url('https://image.tmdb.org/t/p/original/9O1Iy9od7uG4l5X1X8X8X8X8X8X8X8.jpg');
+      background-size: cover;
+      background-position: center top;
+      display: flex;
+      align-items: center;
+      padding: 0 4%;
+      margin-bottom: 20px;
+    }
+
+    /* Para garantir que a imagem apareça, usamos uma imagem de fundo genérica de um filme famoso (Oppenheimer) via TMDB */
+    .hero {
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.85) 15%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.85) 100%), 
+                        url('https://image.tmdb.org/t/p/original/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg'); /* Oppenheimer */
+      background-size: cover;
+      background-position: center 20%;
+    }
+
+    .hero-content {
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+      letter-spacing: -1px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: #e5e5e5;
+    }
+
+    .hero-meta .match {
+      color: #46d369;
+      font-weight: 700;
+    }
+
+    .hero-meta .rating {
+      border: 1px solid #b3b3b3;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .hero-description {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #e5e5e5;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+      margin-bottom: 25px;
+      max-width: 90%;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 26px;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .btn-play {
+      background-color: #fff;
+      color: #000;
+    }
+
+    .btn-play:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-info {
+      background-color: rgba(109, 109, 110, 0.7);
+      color: #fff;
+    }
+
+    .btn-info:hover {
+      background-color: rgba(109, 109, 110, 0.9);
+    }
+
+    /* SEÇÃO DE FILMES (CARROSSEL) */
+    .row {
+      margin: 30px 0;
+      padding: 0 4%;
+    }
+
+    .row h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #e5e5e5;
+    }
+
+    .row-posters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 0;
+      scrollbar-width: thin;
+      scrollbar-color: #e50914 #141414;
+    }
+
+    .row-posters::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .row-posters::-webkit-scrollbar-track {
+      background: #141414;
+    }
+
+    .row-posters::-webkit-scrollbar-thumb {
+      background: #e50914;
+      border-radius: 10px;
+    }
+
+    .poster {
+      flex: 0 0 auto;
+      width: 200px;
+      border-radius: 4px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .poster img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .poster:hover {
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    .poster .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #e50914;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .poster .title-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      padding: 20px 8px 8px;
+      border-radius: 0 0 4px 4px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s;
+      text-align: center;
+    }
+
+    .poster:hover .title-overlay {
+      opacity: 1;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 4% 20px;
+      color: #b3b3b3;
+      font-size: 13px;
+      margin-top: 40px;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      color: #b3b3b3;
+      text-decoration: none;
+      transition: text-decoration 0.2s;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: #808080;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 3rem;
+      }
+      .poster {
+        width: 160px;
+      }
+      .poster img {
+        height: 240px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-right .nav-links {
+        display: none;
+      }
+      .hero-title {
+        font-size: 2.4rem;
+      }
+      .hero-description {
+        font-size: 0.95rem;
+      }
+      .btn {
+        font-size: 0.9rem;
+        padding: 8px 18px;
+      }
+      .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .poster {
+        width: 130px;
+      }
+      .poster img {
+        height: 195px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.8rem;
+      }
+      .hero {
+        height: 70vh;
+      }
+      .poster {
+        width: 110px;
+      }
+      .poster img {
+        height: 165px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo">NETFLIX<span>clone</span></div>
+    <nav class="nav-links">
+      <a href="#">Início</a>
+      <a href="#">Séries</a>
+      <a href="#">Filmes</a>
+      <a href="#">Bombando</a>
+      <a href="#">Minha lista</a>
+    </nav>
+    <div class="header-right">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-bell"></i>
+      <div class="avatar">N</div>
+    </div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Oppenheimer</h1>
+      <div class="hero-meta">
+        <span class="match">98% relevante</span>
+        <span>2023</span>
+        <span class="rating">16</span>
+        <span>3h 1min</span>
+        <span>4K HDR</span>
+      </div>
+      <p class="hero-description">
+        A história do cientista J. Robert Oppenheimer e seu papel no desenvolvimento da bomba atômica durante a Segunda Guerra Mundial.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn btn-play"><i class="fas fa-play"></i> Assistir</button>
+        <button class="btn btn-info"><i class="fas fa-info-circle"></i> Mais informações</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARROSSEL DE FILMES E SÉRIES -->
+  <div class="row">
+    <h2>Populares na Netflix</h2>
+    <div class="row-posters" id="row-populares">
+      <!-- Os pôsteres são inseridos via JavaScript para manter o HTML limpo -->
+    </div>
+  </div>
+
+  <div class="row">
+    <h2>Em alta</h2>
+    <div class="row-posters" id="row-emalta">
+      <!-- Inserido via JS -->
+    </div>
+  </div>
+
+  <div class="row">
+    <h2>Minha lista</h2>
+    <div class="row-posters" id="row-list">
+      <!-- Inserido via JS -->
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">Áudio e legendas</a>
+      <a href="#">Central de ajuda</a>
+      <a href="#">Cartão pré-pago</a>
+      <a href="#">Relações com investidores</a>
+      <a href="#">Carreiras</a>
+      <a href="#">Termos de uso</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Testes de velocidade</a>
+      <a href="#">Contato</a>
+      <a href="#">Código de conduta</a>
+      <a href="#">Central de segurança</a>
+      <a href="#">Preferências de cookies</a>
+    </div>
+    <p class="footer-copy">© 2025 Netflix Clone – Projeto demonstrativo. Não afiliado à Netflix.</p>
+  </footer>
+
+  <script>
+    (function() {
+      // Dados de filmes reais (com URLs de imagens do TMDB) para parecer profissional
+      // Utilizaremos pôsteres do TMDB (API pública, sem chave) – imagens reais de filmes/séries.
+      const filmesPopulares = [
+        { title: 'Oppenheimer', img: 'https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', badge: 'TOP 10' },
+        { title: 'Barbie', img: 'https://image.tmdb.org/t/p/w300/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg', badge: '' },
+        { title: 'Guardiões da Galáxia Vol. 3', img: 'https://image.tmdb.org/t/p/w300/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg', badge: '' },
+        { title: 'Missão: Impossível – Acerto de Contas', img: 'https://image.tmdb.org/t/p/w300/NNxYkU70HPurnNCSiCjYAmacwm.jpg', badge: '' },
+        { title: 'John Wick 4', img: 'https://image.tmdb.org/t/p/w300/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg', badge: '' },
+        { title: 'The Batman', img: 'https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg', badge: '' },
+        { title: 'Duna: Parte 2', img: 'https://image.tmdb.org/t/p/w300/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', badge: 'NOVO' },
+        { title: 'Top Gun: Maverick', img: 'https://image.tmdb.org/t/p/w300/62HCnUTziyWcpDaBO2i1DX17ljH.jpg', badge: '' },
+        { title: 'Stranger Things', img: 'https://image.tmdb.org/t/p/w300/49WJfeN0moxb9IPfGn8AIqMGskD.jpg', badge: 'SÉRIE' },
+        { title: 'The Crown', img: 'https://image.tmdb.org/t/p/w300/1M876KPjulVwppEpldhdc8V4o68.jpg', badge: '' },
+      ];
+
+      const filmesEmAlta = [
+        { title: 'Round 6', img: 'https://image.tmdb.org/t/p/w300/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg', badge: 'TOP 10' },
+        { title: 'Wandinha', img: 'https://image.tmdb.org/t/p/w300/9PFonBhy4cQy7Jz20NpMygczOkv.jpg', badge: '' },
+        { title: 'The Last of Us', img: 'https://image.tmdb.org/t/p/w300/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg', badge: 'NOVO' },
+        { title: 'Succession', img: 'https://image.tmdb.org/t/p/w300/7HW47XbkNQ5fiwQFYGWdw9gs144.jpg', badge: '' },
+        { title: 'The Bear', img: 'https://image.tmdb.org/t/p/w300/sHFlbKS3WLqMnp9t2ghADIJFnuQ.jpg', badge: '' },
+        { title: 'Wednesday', img: 'https://image.tmdb.org/t/p/w300/9PFonBhy4cQy7Jz20NpMygczOkv.jpg', badge: '' },
+        { title: 'The Witcher', img: 'https://image.tmdb.org/t/p/w300/7vjaCdMw15FEbXyLcQ1vCw5VvXZ.jpg', badge: '' },
+        { title: 'Black Mirror', img: 'https://image.tmdb.org/t/p/w300/7PRddO7z7mcPi21nZTCMGShA8Gm.jpg', badge: '' },
+      ];
+
+      const filmesMinhaLista = [
+        { title: 'Interestelar', img: 'https://image.tmdb.org/t/p/w300/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', badge: '' },
+        { title: 'O Poderoso Chefão', img: 'https://image.tmdb.org/t/p/w300/3bhkrj58Vtu7enYsRolD1fZdja1.jpg', badge: '' },
+        { title: 'Pulp Fiction', img: 'https://image.tmdb.org/t/p/w300/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg', badge: '' },
+        { title: 'Clube da Luta', img: 'https://image.tmdb.org/t/p/w300/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg', badge: '' },
+        { title: 'Forrest Gump', img: 'https://image.tmdb.org/t/p/w300/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg', badge: '' },
+        { title: 'Matrix', img: 'https://image.tmdb.org/t/p/w300/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', badge: '' },
+      ];
+
+      // Função para criar pôsteres dinamicamente
+      function renderizarPosters(lista, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = ''; // limpa
+
+        lista.forEach(item => {
+          const posterDiv = document.createElement('div');
+          posterDiv.className = 'poster';
+
+          const img = document.createElement('img');
+          img.src = item.img;
+          img.alt = item.title;
+          img.loading = 'lazy'; // carregamento otimizado
+
+          // Badge (se houver)
+          if (item.badge) {
+            const badgeSpan = document.createElement('span');
+            badgeSpan.className = 'badge';
+            badgeSpan.textContent = item.badge;
+            posterDiv.appendChild(badgeSpan);
+          }
+
+          // Overlay com título (para aparecer no hover)
+          const overlay = document.createElement('div');
+          overlay.className = 'title-overlay';
+          overlay.textContent = item.title;
+
+          posterDiv.appendChild(img);
+          posterDiv.appendChild(overlay);
+          container.appendChild(posterDiv);
+        });
+      }
+
+      // Renderiza as três fileiras
+      renderizarPosters(filmesPopulares, 'row-populares');
+      renderizarPosters(filmesEmAlta, 'row-emalta');
+      renderizarPosters(filmesMinhaLista, 'row-list');
+
+      // Efeito de scroll no header (mudar fundo)
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+
+      // Pequeno ajuste: evitar que o clique no botão "Assistir" recarregue a página
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', (e) => e.preventDefault());
+      });
+
+      // Simular interatividade nos pôsteres (console log)
+      document.querySelectorAll('.poster').forEach(poster => {
+        poster.addEventListener('click', () => {
+          const title = poster.querySelector('.title-overlay')?.textContent || 'Filme';
+          console.log(`Assistir: ${title}`);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
